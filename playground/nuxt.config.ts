@@ -3,5 +3,9 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
-  yandexMetrika: {},
+  yandexMetrika: {
+    id: 12345678,
+    enabled: false,
+    debug: true,
+  },
 })
