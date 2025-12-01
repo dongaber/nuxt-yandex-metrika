@@ -1,21 +1,38 @@
 import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defu } from 'defu'
+import type { ModuleOptions } from './types'
 
-// Module options TypeScript interface definition
-export interface ModuleOptions {
-  test?: boolean
-}
+export type { ModuleOptions } from './types'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-yandex-metrika',
     configKey: 'yandexMetrika',
   },
-  // Default configuration options of the Nuxt module
-  defaults: {},
-  setup(_options, _nuxt) {
+  defaults: {
+    id: 99999999,
+    enabled: true,
+    debug: false,
+    clickmap: false,
+    trackLinks: false,
+    accurateTrackBounce: false,
+    webvisor: false,
+    trackHash: false,
+  },
+  setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
+    if (!options.id) {
+      console.warn(
+        '[nuxt-yandex-metrika] Counter ID is not specified. Module will be disabled.',
+      )
+    }
+
+    nuxt.options.runtimeConfig.public.yandexMetrika = defu(
+      nuxt.options.runtimeConfig.public.yandexMetrika,
+      options,
+    )
+
     addPlugin(resolver.resolve('./runtime/plugin'))
   },
 })
