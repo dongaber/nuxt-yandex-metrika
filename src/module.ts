@@ -33,6 +33,9 @@ export default defineNuxtModule<ModuleOptions>({
       options,
     )
 
-    addPlugin(resolver.resolve('./runtime/plugin'))
+    addPlugin({
+      src: resolver.resolve('./runtime/plugins/plugin.server'),
+      mode: 'server',
+    })
   },
 })
